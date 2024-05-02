@@ -136,7 +136,7 @@ public class SocialMediaController {
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Integer> updateMessageText(@PathVariable Integer messageId, @RequestBody String newMessageText) {
         System.out.println("Received messageText: " + newMessageText);
-        // not sure why the 'updateMessageMessageStringEmpty()' is failing and out putting status code [200] instead of [400] eventhough the necessary checks are done here
+        // not sure why the 'updateMessageMessageStringEmpty()' is failing with status code [200] instead of [400] eventhough the necessary checks are done here
         if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {       
             return ResponseEntity.badRequest().build(); // Return 400 if newMessageText is invalid 
         }

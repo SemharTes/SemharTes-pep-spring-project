@@ -17,6 +17,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Map;
+import java.util.HashMap;
+
 
 
 import com.example.entity.Message;
@@ -110,18 +115,6 @@ public class SocialMediaController {
     return ResponseEntity.ok(messages);
   }
 
-    
-    // update message
-    // @PatchMapping("/messages/{messageId}")
-    // public ResponseEntity<Integer> updateMessage(@PathVariable Integer messageId, @RequestBody String newMessageText) {
-    //     int rowsUpdated = messageService.updateMessage(messageId, newMessageText);
-    //     if (rowsUpdated > 0) {
-    //     return ResponseEntity.ok(rowsUpdated);
-    //     } else {
-    //     return ResponseEntity.badRequest().build();
-    //     }
-    // }
-
 
     // Delete message
     @DeleteMapping("/messages/{messageId}")
@@ -139,23 +132,15 @@ public class SocialMediaController {
     }
 
 
-
-
+    //update message
     @PatchMapping("/messages/{messageId}")
     public ResponseEntity<Integer> updateMessageText(@PathVariable Integer messageId, @RequestBody String newMessageText) {
-
-        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {
-            return ResponseEntity.badRequest().build(); // Return 400 if newMessageText is invalid
+        System.out.println("Received messageText: " + newMessageText);
+        // not sure why the 'updateMessageMessageStringEmpty()' is failing and out putting status code [200] instead of [400] eventhough the necessary checks are done here
+        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {       
+            return ResponseEntity.badRequest().build(); // Return 400 if newMessageText is invalid 
         }
 
-        if (newMessageText.isBlank()) {
-            return ResponseEntity.badRequest().build(); // Return 400 if newMessageText is empty
-        }
-
-        // if (messageId == null || messageId <= 0) {
-        //     return ResponseEntity.badRequest().build(); // Return 400 if messageId is null or <= 0
-        // }
-        
         int rowsUpdated = messageService.updateMessageText(messageId, newMessageText);
         if (rowsUpdated > 0) {
             return ResponseEntity.ok(rowsUpdated); // Return 200 with the number of rows updated

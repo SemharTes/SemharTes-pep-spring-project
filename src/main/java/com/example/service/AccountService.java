@@ -16,6 +16,8 @@ public class AccountService {
     @Autowired
   private AccountRepository accountRepository;
 
+
+  // user registration
   public Account registerAccount(Account account) {
     if (isValidRegistration(account)) {
       Account savedAccount = accountRepository.save(account);
@@ -36,7 +38,7 @@ public class AccountService {
   }
 
 
-
+  // user login
   public Account login(String username, String password) {
     Optional<Account> optionalAccount = accountRepository.findByUsername(username);
     if (optionalAccount.isPresent()) {

@@ -9,7 +9,6 @@ package com.example.controller;
  */
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Map;
-import java.util.HashMap;
-
 
 
 import com.example.entity.Message;
@@ -54,7 +48,7 @@ public class SocialMediaController {
   }
 
 
-     // user login
+    // user login
     @PostMapping("/login")
     public ResponseEntity<Account> login(@RequestBody Account account) {
         Account loggedInAccount = accountService.login(account.getUsername(), account.getPassword());
@@ -134,18 +128,20 @@ public class SocialMediaController {
 
     //update message
     @PatchMapping("/messages/{messageId}")
-    public ResponseEntity<Integer> updateMessageText(@PathVariable Integer messageId, @RequestBody String newMessageText) {
-        System.out.println("Received messageText: " + newMessageText);
-        // not sure why the 'updateMessageMessageStringEmpty()' is failing with status code [200] instead of [400] eventhough the necessary checks are done here
-        if (newMessageText == null || newMessageText.trim().isEmpty() || newMessageText.length() > 255) {       
-            return ResponseEntity.badRequest().build(); // Return 400 if newMessageText is invalid 
+    public ResponseEntity<Integer> updateMessageText(@PathVariable Integer messageId, @RequestBody Message updatedMessage) {
+        System.out.println("Received message: " + updatedMessage);
+
+        if (updatedMessage == null || updatedMessage.getMessageText() == null || updatedMessage.getMessageText().trim().isEmpty() || updatedMessage.getMessageText().length() > 255) {
+            return ResponseEntity.badRequest().build(); // Return 400 if messageText is invalid
         }
 
-        int rowsUpdated = messageService.updateMessageText(messageId, newMessageText);
+        updatedMessage.setMessageId(messageId); // Set messageId if not already set in the request
+
+        int rowsUpdated = messageService.updateMessageText(updatedMessage);
         if (rowsUpdated > 0) {
             return ResponseEntity.ok(rowsUpdated); // Return 200 with the number of rows updated
         } else {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().build(); // Message not found or other update failure
         }
     }
         

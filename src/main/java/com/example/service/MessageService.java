@@ -76,16 +76,17 @@ public class MessageService {
 
 
     // update message
-    public int updateMessageText(Integer messageId, String newMessageText) {
-        Message existingMessage = messageRepository.findById(messageId).orElse(null);
+    public int updateMessageText(Message message) {
+        Message existingMessage = messageRepository.findById(message.getMessageId()).orElse(null);
         if (existingMessage == null) {
             return 0; // Message not found
         }
-
-        existingMessage.setMessageText(newMessageText);
+    
+        existingMessage.setMessageText(message.getMessageText());
         messageRepository.save(existingMessage);
         return 1; // Message updated successfully
     }
+    
 
 }
 
